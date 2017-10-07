@@ -32,22 +32,22 @@ public class MainActivity extends AppCompatActivity {
     public static final int CHOOSE_PHOTO = 2;
     public static final int REQUEST_CODE = 0;
 
-    private Button takePhoto;
-    private Button choosePhoto;
-    private ImageView picture;
+    private Button mTakePhoto;
+    private Button mChoosePhoto;
+    private ImageView mPicture;
 
-    private Uri imageUri;
+    private Uri mImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        takePhoto = (Button) findViewById(R.id.take_photo);
-        choosePhoto = (Button) findViewById(R.id.choose_photo);
-        picture = (ImageView) findViewById(R.id.picture);
+        mTakePhoto = (Button) findViewById(R.id.take_photo);
+        mChoosePhoto = (Button) findViewById(R.id.choose_photo);
+        mPicture = (ImageView) findViewById(R.id.picture);
 
-        takePhoto.setOnClickListener(new View.OnClickListener() {
+        mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -62,16 +62,16 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                imageUri = FileProvider.getUriForFile(MainActivity.this,
+                mImageUri = FileProvider.getUriForFile(MainActivity.this,
                         MainActivity.this.getPackageName() + ".provider", outputImage);
 
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                 startActivityForResult(intent, TAKE_PHOTO);
             }
         });
 
-        choosePhoto.setOnClickListener(new View.OnClickListener() {
+        mChoosePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(
-                                getContentResolver().openInputStream(imageUri));
-                        picture.setImageBitmap(bitmap);
+                                getContentResolver().openInputStream(mImageUri));
+                        mPicture.setImageBitmap(bitmap);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         if (imagePath != null) {
 
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            picture.setImageBitmap(bitmap);
+            mPicture.setImageBitmap(bitmap);
         } else {
             Toast.makeText(this, "Failed to get image", Toast.LENGTH_LONG).show();
         }
