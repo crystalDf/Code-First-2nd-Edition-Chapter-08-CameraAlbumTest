@@ -17,7 +17,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,51 +42,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTakePhoto = (Button) findViewById(R.id.take_photo);
-        mChoosePhoto = (Button) findViewById(R.id.choose_photo);
-        mPicture = (ImageView) findViewById(R.id.picture);
+        mTakePhoto = findViewById(R.id.take_photo);
+        mChoosePhoto = findViewById(R.id.choose_photo);
+        mPicture = findViewById(R.id.picture);
 
-        mTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mTakePhoto.setOnClickListener(v -> {
 
-                File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+            File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
 
-                try {
-                    if (outputImage.exists()) {
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                if (outputImage.exists()) {
+                    outputImage.delete();
                 }
-
-                mImageUri = FileProvider.getUriForFile(MainActivity.this,
-                        MainActivity.this.getPackageName() + ".provider", outputImage);
-
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-                startActivityForResult(intent, TAKE_PHOTO);
+                outputImage.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            mImageUri = FileProvider.getUriForFile(MainActivity.this,
+                    MainActivity.this.getPackageName() + ".provider", outputImage);
+
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+            startActivityForResult(intent, TAKE_PHOTO);
         });
 
-        mChoosePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mChoosePhoto.setOnClickListener(v -> {
 
-                if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                        PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                    PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            REQUEST_CODE);
-                } else {
-                    openAlbum();
-                }
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CODE);
+            } else {
+                openAlbum();
             }
         });
-
     }
 
     private void openAlbum() {
